@@ -5,107 +5,96 @@
 //  Created by Coen ten Thije Boonkkamp on 28/12/2024.
 //
 
-import Domain
+@testable import Domain
 import Foundation
 import Testing
+import RFC_5321
 
 @Suite("RFC 5321 Domain Tests")
 struct RFC5321Tests {
-    @Test("Successfully creates standard domain")
+    @Test("Successfully creates RFC_5321.Domain from standard domain")
     func testStandardDomain() throws {
-        let domain = try Domain.RFC5321("mail.example.com")
+        let domain = try RFC_5321.Domain("mail.example.com")
         #expect(domain.name == "mail.example.com")
-        #expect(domain.isStandardDomain)
-        #expect(!domain.isAddressLiteral)
     }
 
-    @Test("Successfully creates IPv4 literal")
-    func testIPv4Literal() throws {
-        let domain = try Domain.RFC5321("[192.168.1.1]")
-        #expect(domain.name == "[192.168.1.1]")
-        #expect(!domain.isStandardDomain)
-        #expect(domain.isAddressLiteral)
-        #expect(domain.addressLiteral == "192.168.1.1")
+    @Test("Successfully creates RFC_5321.Domain with numeric labels")
+    func testNumericLabels() throws {
+        let domain = try RFC_5321.Domain("123.example.com")
+        #expect(domain.name == "123.example.com")
     }
 
-    @Test("Successfully creates IPv6 literal")
-    func testIPv6Literal() throws {
-        let domain = try Domain.RFC5321("[2001:db8:85a3:8d3:1319:8a2e:370:7348]")
-        #expect(domain.name == "[2001:db8:85a3:8d3:1319:8a2e:370:7348]")
-        #expect(!domain.isStandardDomain)
-        #expect(domain.isAddressLiteral)
-        #expect(domain.addressLiteral == "2001:db8:85a3:8d3:1319:8a2e:370:7348")
+    @Test("Successfully gets TLD from RFC_5321.Domain")
+    func testTLD() throws {
+        let domain = try RFC_5321.Domain("example.com")
+        #expect(domain.tld?.stringValue == "com")
     }
 
-    @Test("Fails with empty address literal")
-    func testEmptyAddressLiteral() throws {
-        #expect(throws: Domain.RFC5321.ValidationError.emptyAddressLiteral) {
-            _ = try Domain.RFC5321("[]")
+    @Test("Successfully gets SLD from RFC_5321.Domain")
+    func testSLD() throws {
+        let domain = try RFC_5321.Domain("example.com")
+        #expect(domain.sld?.stringValue == "example")
+    }
+
+    @Test("Fails with empty domain")
+    func testEmptyDomain() throws {
+        #expect(throws: RFC_5321.Domain.ValidationError.empty) {
+            _ = try RFC_5321.Domain("")
         }
     }
 
-    @Test("Fails with invalid IPv4 format")
-    func testInvalidIPv4Format() throws {
-        #expect(throws: Domain.RFC5321.ValidationError.invalidIPv4("256.256.256.256")) {
-            _ = try Domain.RFC5321("[256.256.256.256]")
+    @Test("Fails with invalid TLD starting with number")
+    func testInvalidTLD() throws {
+        #expect(throws: RFC_5321.Domain.ValidationError.invalidTLD("123com")) {
+            _ = try RFC_5321.Domain("example.123com")
         }
     }
 
-    @Test("Fails with invalid IPv6 format")
-    func testInvalidIPv6Format() throws {
-        #expect(throws: Domain.RFC5321.ValidationError.invalidIPv6("not:valid:ipv6")) {
-            _ = try Domain.RFC5321("[not:valid:ipv6]")
-        }
+    @Test("Successfully detects subdomain relationship")
+    func testIsSubdomain() throws {
+        let parent = try RFC_5321.Domain("example.com")
+        let child = try RFC_5321.Domain("mail.example.com")
+        #expect(child.isSubdomain(of: parent))
     }
 
-    @Test("Successfully gets standard domain")
-    func testGetStandardDomain() throws {
-        let domain = try Domain.RFC5321("mail.example.com")
-        #expect(domain.standardDomain?.name == "mail.example.com")
+    @Test("Successfully adds subdomain")
+    func testAddSubdomain() throws {
+        let domain = try RFC_5321.Domain("example.com")
+        let subdomain = try domain.addingSubdomain("mail")
+        #expect(subdomain.name == "mail.example.com")
     }
 
-    @Test("Returns nil standard domain for address literal")
-    func testNilStandardDomainForAddressLiteral() throws {
-        let domain = try Domain.RFC5321("[192.168.1.1]")
-        #expect(domain.standardDomain == nil)
+    @Test("Successfully gets parent domain")
+    func testParentDomain() throws {
+        let domain = try RFC_5321.Domain("mail.example.com")
+        let parent = try domain.parent()
+        #expect(parent?.name == "example.com")
     }
 
-    @Test("Successfully creates from RFC1123")
-    func testCreateFromRFC1123() throws {
-        let rfc1123 = try Domain.RFC1123("mail.example.com")
-        let domain = Domain.RFC5321(domain: rfc1123)
+    @Test("Successfully gets root domain")
+    func testRootDomain() throws {
+        let domain = try RFC_5321.Domain("mail.example.com")
+        let root = try domain.root()
+        #expect(root?.name == "example.com")
+    }
+
+    @Test("Successfully creates domain from root components")
+    func testRootInitializer() throws {
+        let domain = try RFC_5321.Domain.root("example", "com")
+        #expect(domain.name == "example.com")
+    }
+
+    @Test("Successfully creates domain from subdomain components")
+    func testSubdomainInitializer() throws {
+        let domain = try RFC_5321.Domain.subdomain("com", "example", "mail")
         #expect(domain.name == "mail.example.com")
-        #expect(domain.isStandardDomain)
     }
 
-    @Test("Successfully creates IPv4 literal directly")
-    func testCreateIPv4Literal() throws {
-        let domain = try Domain.RFC5321(ipv4Literal: "192.168.1.1")
-        #expect(domain.name == "[192.168.1.1]")
-        #expect(domain.addressLiteral == "192.168.1.1")
-    }
-
-    @Test("Successfully creates IPv6 literal directly")
-    func testCreateIPv6Literal() throws {
-        let ipv6 = "2001:db8:85a3:8d3:1319:8a2e:370:7348"
-        let domain = try Domain.RFC5321(ipv6Literal: ipv6)
-        #expect(domain.name == "[\(ipv6)]")
-        #expect(domain.addressLiteral == ipv6)
-    }
-
-    @Test("Successfully encodes and decodes standard domain")
-    func testCodableStandardDomain() throws {
-        let original = try Domain.RFC5321("mail.example.com")
+    @Test("Successfully encodes and decodes")
+    func testCodable() throws {
+        let original = try RFC_5321.Domain("mail.example.com")
         let encoded = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(Domain.RFC5321.self, from: encoded)
-        #expect(original == decoded)
-    }
-
-    @Test("Successfully encodes and decodes IPv4 literal")
-    func testCodableIPv4() throws {
-        let original = try Domain.RFC5321("[192.168.1.1]")
-        let encoded = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(Domain.RFC5321.self, from: encoded)
+        let decoded = try JSONDecoder().decode(RFC_5321.Domain.self, from: encoded)
         #expect(original == decoded)
     }
 }

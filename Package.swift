@@ -12,9 +12,9 @@ extension Target.Dependency {
 }
 
 extension Target.Dependency {
-    static var rfc1035: Self { .product(name: "RFC 1035", package: "swift-web-standards") }
-    static var rfc1123: Self { .product(name: "RFC 1123", package: "swift-web-standards") }
-    static var rfc5321: Self { .product(name: "RFC 5321", package: "swift-web-standards") }
+    static var rfc1035: Self { .product(name: "RFC_1035", package: "swift-rfc-1035") }
+    static var rfc1123: Self { .product(name: "RFC_1123", package: "swift-rfc-1123") }
+    static var rfc5321: Self { .product(name: "RFC_5321", package: "swift-rfc-5321") }
 }
 
 let package = Package(
@@ -24,7 +24,9 @@ let package = Package(
         .library(name: .domain, targets: [.domain])
     ],
     dependencies: [
-        .package(url: "https://github.com/coenttb/swift-web-standards", branch: "main")
+        .package(url: "https://github.com/swift-web-standards/swift-rfc-1035", from: "0.0.1"),
+        .package(url: "https://github.com/swift-web-standards/swift-rfc-1123", from: "0.0.1"),
+        .package(url: "https://github.com/swift-web-standards/swift-rfc-5321", from: "0.0.1")
     ],
     targets: [
         .target(
@@ -38,7 +40,10 @@ let package = Package(
         .testTarget(
             name: .domain.tests,
             dependencies: [
-                .domain
+                .domain,
+                .rfc1035,
+                .rfc1123,
+                .rfc5321
             ]
         )
     ],

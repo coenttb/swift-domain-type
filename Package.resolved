@@ -1,67 +1,31 @@
 {
-  "originHash" : "7fad41ef633e4a6049475eba6cdf21c24e1ec1f1b7df6f5e0bbe0c5202874934",
+  "originHash" : "34e669222d99c4d9a083596dea41b90a02b717133f5dd97ee811ae1ac6e3ea8e",
   "pins" : [
     {
-      "identity" : "combine-schedulers",
+      "identity" : "swift-rfc-1035",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/combine-schedulers",
+      "location" : "https://github.com/swift-web-standards/swift-rfc-1035",
       "state" : {
-        "revision" : "5928286acce13def418ec36d05a001a9641086f2",
-        "version" : "1.0.3"
+        "revision" : "95e9ca2e3f3ec303978e8cd18013e02b7d0f8a62",
+        "version" : "0.0.1"
       }
     },
     {
-      "identity" : "swift-clocks",
+      "identity" : "swift-rfc-1123",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-clocks",
+      "location" : "https://github.com/swift-web-standards/swift-rfc-1123",
       "state" : {
-        "revision" : "cc46202b53476d64e824e0b6612da09d84ffde8e",
-        "version" : "1.0.6"
+        "revision" : "97b8decb5fdfc02177faa5965a95606e36373388",
+        "version" : "0.0.1"
       }
     },
     {
-      "identity" : "swift-concurrency-extras",
+      "identity" : "swift-rfc-5321",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-concurrency-extras",
+      "location" : "https://github.com/swift-web-standards/swift-rfc-5321",
       "state" : {
-        "revision" : "82a4ae7170d98d8538ec77238b7eb8e7199ef2e8",
-        "version" : "1.3.1"
-      }
-    },
-    {
-      "identity" : "swift-dependencies",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-dependencies",
-      "state" : {
-        "revision" : "4c90d6b2b9bf0911af87b103bb40f41771891596",
-        "version" : "1.9.2"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax",
-      "state" : {
-        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
-        "version" : "601.0.1"
-      }
-    },
-    {
-      "identity" : "swift-web-standards",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/coenttb/swift-web-standards",
-      "state" : {
-        "branch" : "main",
-        "revision" : "5bf44d734c5f5efce72cd3330b279f040c4281ef"
-      }
-    },
-    {
-      "identity" : "xctest-dynamic-overlay",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
-      "state" : {
-        "revision" : "23e3442166b5122f73f9e3e622cd1e4bafeab3b7",
-        "version" : "1.6.0"
+        "revision" : "449d9291d1d2f6dcd6793c7d4ea855db1e7b062d",
+        "version" : "0.0.1"
       }
     }
   ],
