@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Testing
 import RFC_1035
+import Testing
 
 @testable import Domain
 
