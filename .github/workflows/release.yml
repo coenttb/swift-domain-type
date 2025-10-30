@@ -72,7 +72,7 @@ jobs:
 
           # Create archives of the built libraries
           cd .build
-          tar -czf swift-emailaddress-type-macos.tar.gz \
+          tar -czf swift-domain-type-macos.tar.gz \
             arm64-apple-macosx/release/*.swiftmodule \
             x86_64-apple-macosx/release/*.swiftmodule \
             2>/dev/null || true
@@ -84,22 +84,22 @@ jobs:
           swift package \
             --allow-writing-to-directory ./docs \
             generate-documentation \
-            --target EmailAddress \
+            --target Domain \
             --output-path ./docs \
             --transform-for-static-hosting \
-            --hosting-base-path swift-emailaddress-type
+            --hosting-base-path swift-domain-type
 
           cat > ./docs/index.html << 'EOF'
           <!DOCTYPE html>
           <html>
             <head>
               <meta charset="utf-8">
-              <title>Redirecting to swift-emailaddress-type documentation</title>
-              <meta http-equiv="refresh" content="0; url=./documentation/emailaddress/">
-              <link rel="canonical" href="./documentation/emailaddress/">
+              <title>Redirecting to swift-domain-type documentation</title>
+              <meta http-equiv="refresh" content="0; url=./documentation/domain/">
+              <link rel="canonical" href="./documentation/domain/">
             </head>
             <body>
-              <p>Redirecting to <a href="./documentation/emailaddress/">swift-emailaddress-type documentation</a>...</p>
+              <p>Redirecting to <a href="./documentation/domain/">swift-domain-type documentation</a>...</p>
             </body>
           </html>
           EOF
@@ -113,7 +113,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            .build/swift-emailaddress-type-macos.tar.gz
+            .build/swift-domain-type-macos.tar.gz
             documentation.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -142,10 +142,10 @@ jobs:
           swift package \
             --allow-writing-to-directory ./docs \
             generate-documentation \
-            --target EmailAddress \
+            --target Domain \
             --output-path ./docs \
             --transform-for-static-hosting \
-            --hosting-base-path swift-emailaddress-type
+            --hosting-base-path swift-domain-type
 
           # Create root index.html redirect
           cat > ./docs/index.html << 'EOF'
@@ -153,12 +153,12 @@ jobs:
           <html>
             <head>
               <meta charset="utf-8">
-              <title>Redirecting to swift-emailaddress-type documentation</title>
-              <meta http-equiv="refresh" content="0; url=./documentation/emailaddress/">
-              <link rel="canonical" href="./documentation/emailaddress/">
+              <title>Redirecting to swift-domain-type documentation</title>
+              <meta http-equiv="refresh" content="0; url=./documentation/domain/">
+              <link rel="canonical" href="./documentation/domain/">
             </head>
             <body>
-              <p>Redirecting to <a href="./documentation/emailaddress/">swift-emailaddress-type documentation</a>...</p>
+              <p>Redirecting to <a href="./documentation/domain/">swift-domain-type documentation</a>...</p>
             </body>
           </html>
           EOF
