@@ -7,6 +7,20 @@
 
 Type-safe domain name handling for Swift with multi-RFC standard support.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Usage Examples](#usage-examples)
+- [Architecture](#architecture)
+- [Error Handling](#error-handling)
+- [Related Packages](#related-packages)
+- [Requirements](#requirements)
+- [License](#license)
+- [Contributing](#contributing)
+
 ## Overview
 
 `swift-domain-type` provides a unified `Domain` type that supports multiple RFC standards for domain names:
@@ -19,7 +33,7 @@ The library automatically selects the most appropriate RFC format based on the i
 
 ## Features
 
-- **Multi-RFC Support**: Seamlessly handles RFC 1035, 1123, and 5321 formats
+- **Multi-RFC Support**: Handles RFC 1035, 1123, and 5321 formats
 - **Type Safety**: Compile-time guarantees with Swift 6.0 strict concurrency
 - **Domain Operations**: Add subdomains, get parent domains, check subdomain relationships
 - **Component Access**: Extract TLD, SLD, and domain labels
