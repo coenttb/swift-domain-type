@@ -235,10 +235,11 @@ do {
 
 ## Related Packages
 
-- [swift-rfc-1035](https://github.com/swift-web-standards/swift-rfc-1035): Swift implementation of RFC 1035: Domain Names - Implementation and Specification
-- [swift-rfc-1123](https://github.com/swift-web-standards/swift-rfc-1123): Swift implementation of RFC 1123: Requirements for Internet Hosts - Application and Support
-- [swift-rfc-5321](https://github.com/swift-web-standards/swift-rfc-5321): Swift implementation of RFC 5321: Simple Mail Transfer Protocol
-- [swift-emailaddress-type](https://github.com/coenttb/swift-emailaddress-type): A Swift package with a type-safe EmailAddress model
+### Used By
+
+- [swift-emailaddress-type](https://github.com/coenttb/swift-emailaddress-type): A Swift package with a type-safe EmailAddress model.
+- [swift-types-foundation](https://github.com/coenttb/swift-types-foundation): A Swift package bundling essential type-safe packages for domain modeling.
+- [swift-web-foundation](https://github.com/coenttb/swift-web-foundation): A Swift package with tools to simplify web development.
 
 ## Requirements
 
