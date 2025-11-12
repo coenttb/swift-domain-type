@@ -24,9 +24,9 @@ let package = Package(
         .library(name: .domain, targets: [.domain])
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-web-standards/swift-rfc-1035", from: "0.0.1"),
-        .package(url: "https://github.com/swift-web-standards/swift-rfc-1123", from: "0.0.1"),
-        .package(url: "https://github.com/swift-web-standards/swift-rfc-5321", from: "0.0.1")
+        .package(url: "https://github.com/swift-standards/swift-rfc-1035", from: "0.0.1"),
+        .package(url: "https://github.com/swift-standards/swift-rfc-1123", from: "0.0.1"),
+        .package(url: "https://github.com/swift-standards/swift-rfc-5321", from: "0.0.1")
     ],
     targets: [
         .target(
