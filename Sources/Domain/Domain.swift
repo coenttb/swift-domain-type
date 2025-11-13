@@ -52,21 +52,19 @@ extension Domain {
     }
 
     /// Initialize from RFC1123
-    public init(rfc1123: RFC_1123.Domain) throws {
+    /// Note: RFC 5321 reuses RFC 1123 domain definitions, so this conversion is infallible
+    public init(rfc1123: RFC_1123.Domain) {
         self.rfc1035 = nil  // RFC1123 may not be RFC1035 compliant
         self.rfc1123 = rfc1123
-        self.rfc5321 = try {
-            guard let domain = try? RFC_5321.Domain(rfc1123.name) else {
-                throw DomainError.conversionFailure
-            }
-            return domain
-        }()
+        // RFC 5321 uses RFC 1123 domains directly (type alias), so this is safe
+        self.rfc5321 = rfc1123
     }
 
     /// Initialize from RFC_5321.Domain
+    /// Note: RFC_5321.Domain is actually a type alias for RFC_1123.Domain
     public init(rfc5321: RFC_5321.Domain) {
         self.rfc1035 = nil  // RFC_5321.Domain may not be RFC1035 compliant
-        self.rfc1123 = nil  // RFC_5321.Domain may not be RFC1123 compliant
+        self.rfc1123 = rfc5321  // RFC 5321 uses RFC 1123 domains
         self.rfc5321 = rfc5321
     }
 }
