@@ -6,7 +6,7 @@
 //
 
 import Testing
-
+import Foundation
 @testable import Domain_Standard
 
 @Suite

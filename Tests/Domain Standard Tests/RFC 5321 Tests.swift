@@ -7,7 +7,7 @@
 
 import RFC_5321
 import Testing
-
+import Foundation
 @testable import Domain_Standard
 
 @Suite
@@ -27,13 +27,13 @@ struct `RFC 5321 Domain Tests` {
     @Test
     func `Successfully gets TLD from RFC_5321.Domain`() throws {
         let domain = try RFC_5321.Domain("example.com")
-        #expect(domain.tld?.stringValue == "com")
+        #expect(domain.tld.map(String.init) == "com")
     }
 
     @Test
     func `Successfully gets SLD from RFC_5321.Domain`() throws {
         let domain = try RFC_5321.Domain("example.com")
-        #expect(domain.sld?.stringValue == "example")
+        #expect(domain.sld.map(String.init) == "example")
     }
 
     @Test

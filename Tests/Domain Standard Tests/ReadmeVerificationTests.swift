@@ -7,7 +7,7 @@
 
 import RFC_1035
 import Testing
-
+import Foundation
 @testable import Domain_Standard
 
 @Suite("README Code Examples Validation", .serialized)
