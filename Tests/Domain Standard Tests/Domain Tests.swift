@@ -9,22 +9,22 @@ import Testing
 
 @testable import Domain_Standard
 
-@Suite("Domain Tests")
-struct DomainTests {
-    @Test("Successfully creates domain from string")
-    func testCreateFromString() throws {
+@Suite
+struct `Domain Tests` {
+    @Test
+    func `Successfully creates domain from string`() throws {
         let domain = try Domain("example.com")
         #expect(domain.name == "example.com")
     }
 
-    @Test("Successfully creates domain from labels")
-    func testCreateFromLabels() throws {
+    @Test
+    func `Successfully creates domain from labels`() throws {
         let domain = try Domain(labels: ["mail", "example", "com"])
         #expect(domain.name == "mail.example.com")
     }
 
-    @Test("Successfully handles subdomain relationship")
-    func testSubdomainRelationship() throws {
+    @Test
+    func `Successfully handles subdomain relationship`() throws {
         let parent = try Domain("example.com")
         let child = try Domain("mail.example.com")
         let unrelated = try Domain("other.com")
@@ -34,23 +34,23 @@ struct DomainTests {
         #expect(!child.isSubdomain(of: unrelated))
     }
 
-    @Test("Successfully adds subdomain")
-    func testAddSubdomain() throws {
+    @Test
+    func `Successfully adds subdomain`() throws {
         let domain = try Domain("example.com")
         let subdomain = try domain.addingSubdomain("mail")
         #expect(subdomain.name == "mail.example.com")
         #expect(subdomain.isSubdomain(of: domain))
     }
 
-    @Test("Successfully gets parent domain")
-    func testParentDomain() throws {
+    @Test
+    func `Successfully gets parent domain`() throws {
         let domain = try Domain("mail.example.com")
         let parent = try domain.parent()
         #expect(parent?.name == "example.com")
     }
 
-    @Test("Successfully encodes and decodes domain")
-    func testCodable() throws {
+    @Test
+    func `Successfully encodes and decodes domain`() throws {
         let original = try Domain("mail.example.com")
         let encoded = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(Domain.self, from: encoded)
@@ -58,8 +58,8 @@ struct DomainTests {
         #expect(decoded.name == "mail.example.com")
     }
 
-    @Test("Successfully uses RawRepresentable")
-    func testRawRepresentable() throws {
+    @Test
+    func `Successfully uses RawRepresentable`() throws {
         let domain = try Domain("example.com")
         #expect(domain.rawValue == "example.com")
         let fromRaw = Domain(rawValue: "example.com")
@@ -67,8 +67,8 @@ struct DomainTests {
         #expect(fromRaw?.name == "example.com")
     }
 
-    @Test("Successfully uses CustomStringConvertible")
-    func testDescription() throws {
+    @Test
+    func `Successfully uses CustomStringConvertible`() throws {
         let domain = try Domain("example.com")
         #expect(domain.description == "example.com")
         #expect("\(domain)" == "example.com")

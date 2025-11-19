@@ -13,8 +13,8 @@ import Testing
 @Suite("README Code Examples Validation", .serialized)
 struct ReadmeVerificationTests {
 
-    @Test("Quick Start - Basic Domain Creation (README lines 43-53)")
-    func quickStartBasicDomainCreation() throws {
+    @Test
+    func `Quick Start - Basic Domain Creation (README lines 43-53)`() throws {
         // Create a domain from a string
         let domain = try _Domain("example.com")
         #expect(domain.name == "example.com")
@@ -24,8 +24,8 @@ struct ReadmeVerificationTests {
         #expect(domain.sld == "example")
     }
 
-    @Test("Quick Start - Working with Subdomains (README lines 57-68)")
-    func quickStartWorkingWithSubdomains() throws {
+    @Test
+    func `Quick Start - Working with Subdomains (README lines 57-68)`() throws {
         let domain = try _Domain("example.com")
 
         // Create a subdomain
@@ -41,8 +41,8 @@ struct ReadmeVerificationTests {
         #expect(parent?.name == "example.com")
     }
 
-    @Test("Quick Start - Multi-RFC Format Support (README lines 72-88)")
-    func quickStartMultiRFCFormatSupport() throws {
+    @Test
+    func `Quick Start - Multi-RFC Format Support (README lines 72-88)`() throws {
         // The Domain type automatically detects which RFC formats are valid
         let domain = try _Domain("example.com")
 
@@ -62,8 +62,8 @@ struct ReadmeVerificationTests {
         #expect(domain.rfc5321.name == "example.com")
     }
 
-    @Test("Initializing Domains (README lines 94-104)")
-    func initializingDomains() throws {
+    @Test
+    func `Initializing Domains (README lines 94-104)`() throws {
         // From string
         let domain1 = try _Domain("example.com")
         #expect(domain1.name == "example.com")
@@ -78,8 +78,8 @@ struct ReadmeVerificationTests {
         #expect(domain3.name == "example.com")
     }
 
-    @Test("Domain Operations (README lines 108-125)")
-    func domainOperations() throws {
+    @Test
+    func `Domain Operations (README lines 108-125)`() throws {
         let domain = try _Domain("example.com")
 
         // Add multiple subdomain levels
@@ -100,8 +100,8 @@ struct ReadmeVerificationTests {
         #expect(hierarchy.contains("example.com"))
     }
 
-    @Test("Subdomain Checking (README lines 129-139)")
-    func subdomainChecking() throws {
+    @Test
+    func `Subdomain Checking (README lines 129-139)`() throws {
         let root = try _Domain("example.com")
         let sub1 = try _Domain("www.example.com")
         let sub2 = try _Domain("api.example.com")
@@ -113,8 +113,8 @@ struct ReadmeVerificationTests {
         #expect(root.isSubdomain(of: sub1) == false)
     }
 
-    @Test("Codable Support (README lines 143-155)")
-    func codableSupport() throws {
+    @Test
+    func `Codable Support (README lines 143-155)`() throws {
         struct Config: Codable {
             let domain: _Domain
         }
@@ -129,8 +129,8 @@ struct ReadmeVerificationTests {
         #expect(decoded.domain.name == "example.com")
     }
 
-    @Test("RawRepresentable (README lines 159-168)")
-    func rawRepresentable() throws {
+    @Test
+    func `RawRepresentable (README lines 159-168)`() throws {
         let domain = try _Domain("example.com")
 
         // Get raw value
@@ -142,8 +142,8 @@ struct ReadmeVerificationTests {
         #expect(reconstructed?.name == "example.com")
     }
 
-    @Test("Error Handling (README lines 207-219)")
-    func errorHandling() throws {
+    @Test
+    func `Error Handling (README lines 207-219)`() throws {
         // DomainError enum provides detailed error information
         // Note: Invalid domains throw errors from underlying RFC implementations
         do {
