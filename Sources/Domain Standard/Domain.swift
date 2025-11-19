@@ -4,7 +4,6 @@
 //
 //  Created by Coen ten Thije Boonkkamp on 28/12/2024.
 //
-import Foundation
 import RFC_1035
 import RFC_1123
 import RFC_5321
@@ -78,12 +77,12 @@ extension Domain {
 
     /// The top-level domain if available (only for RFC1035/1123 domains)
     public var tld: String? {
-        rfc1035?.tld?.stringValue ?? rfc1123?.tld?.stringValue
+        rfc1035?.tld?.value ?? rfc1123?.tld?.value
     }
 
     /// The second-level domain if available (only for RFC1035/1123 domains)
     public var sld: String? {
-        rfc1035?.sld?.stringValue ?? rfc1123?.sld?.stringValue
+        rfc1035?.sld?.value ?? rfc1123?.sld?.value
     }
 
     /// Returns true if this is a standard domain (not an IP address)
@@ -138,7 +137,7 @@ extension Domain {
 
 // MARK: - Errors
 extension Domain {
-    public enum DomainError: Error, Equatable, LocalizedError {
+    public enum DomainError: Error, Equatable {
         case cannotCreateSubdomain
         case conversionFailure
         case invalidFormat(description: String)

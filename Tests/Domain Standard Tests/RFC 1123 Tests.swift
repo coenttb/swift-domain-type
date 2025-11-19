@@ -5,11 +5,10 @@
 //  Created by Coen ten Thije Boonkkamp on 28/12/2024.
 //
 
-import Foundation
 import RFC_1123
 import Testing
 
-@testable import Domain
+@testable import Domain_Standard
 
 @Suite("RFC 1123 Host Tests")
 struct RFC1123Tests {

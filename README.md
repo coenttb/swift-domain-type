@@ -1,6 +1,6 @@
-# swift-domain-type
+# swift-domain-standard
 
-[![CI](https://github.com/coenttb/swift-domain-type/workflows/CI/badge.svg)](https://github.com/coenttb/swift-domain-type/actions/workflows/ci.yml)
+[![CI](https://github.com/coenttb/swift-domain-standard/workflows/CI/badge.svg)](https://github.com/coenttb/swift-domain-standard/actions/workflows/ci.yml)
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
 Type-safe domain name handling for Swift with multi-RFC standard support.
@@ -21,7 +21,7 @@ Type-safe domain name handling for Swift with multi-RFC standard support.
 
 ## Overview
 
-`swift-domain-type` provides a unified `Domain` type that supports multiple RFC standards for domain names:
+`swift-domain-standard` provides a unified `Domain` type that supports multiple RFC standards for domain names:
 
 - **RFC 1035**: DNS domain names (strict DNS format)
 - **RFC 1123**: Internet host names (allows leading digits)
@@ -44,7 +44,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/coenttb/swift-domain-type", from: "0.1.0")
+    .package(url: "https://github.com/coenttb/swift-domain-standard", from: "0.1.0")
 ]
 ```
 
@@ -53,7 +53,7 @@ dependencies: [
 ### Basic Domain Creation
 
 ```swift
-import Domain
+import Domain_Standard
 
 // Create a domain from a string
 let domain = try Domain("example.com")
@@ -235,7 +235,7 @@ do {
 
 ### Used By
 
-- [swift-emailaddress-type](https://github.com/coenttb/swift-emailaddress-type): A Swift package with a type-safe EmailAddress model.
+- [swift-emailaddress-standard](https://github.com/coenttb/swift-emailaddress-standard): A Swift package with a type-safe EmailAddress model.
 - [swift-types-foundation](https://github.com/coenttb/swift-types-foundation): A Swift package bundling essential type-safe packages for domain modeling.
 - [swift-web-foundation](https://github.com/coenttb/swift-web-foundation): A Swift package with tools to simplify web development.
 

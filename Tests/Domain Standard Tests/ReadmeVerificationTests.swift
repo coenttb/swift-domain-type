@@ -1,15 +1,14 @@
 //
 //  ReadmeVerificationTests.swift
-//  swift-domain-type
+//  swift-domain-standard
 //
 //  Validates all code examples from README.md
 //
 
-import Foundation
 import RFC_1035
 import Testing
 
-@testable import Domain
+@testable import Domain_Standard
 
 @Suite("README Code Examples Validation", .serialized)
 struct ReadmeVerificationTests {

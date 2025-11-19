@@ -1,10 +1,9 @@
 // swift-tools-version:6.0
 
-import Foundation
 import PackageDescription
 
 extension String {
-    static let domain: Self = "Domain"
+    static let domain: Self = "Domain Standard"
 }
 
 extension Target.Dependency {
@@ -18,8 +17,13 @@ extension Target.Dependency {
 }
 
 let package = Package(
-    name: "swift-domain-type",
-    platforms: [ .macOS(.v13), .iOS(.v16) ],
+    name: "swift-domain-standard",
+    platforms: [
+        .macOS(.v15),
+        .iOS(.v18),
+        .tvOS(.v18),
+        .watchOS(.v11)
+    ],
     products: [
         .library(name: .domain, targets: [.domain])
     ],

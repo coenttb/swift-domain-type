@@ -1,4 +1,3 @@
-import Foundation
 import RFC_1123
 
 extension Domain {
