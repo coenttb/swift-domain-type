@@ -129,7 +129,7 @@ extension Domain {
             return try Domain(rfc1035: parent)
         }
         if let domain = rfc1123, let parent = try domain.parent() {
-            return try Domain(rfc1123: parent)
+            return Domain(rfc1123: parent)
         }
         return nil
     }
