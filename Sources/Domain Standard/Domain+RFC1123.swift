@@ -1,4 +1,4 @@
-import RFC_1123
+public import RFC_1123
 
 extension Domain {
     // Forward conversion already exists in Domain.swift
