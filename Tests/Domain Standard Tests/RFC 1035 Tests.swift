@@ -38,7 +38,7 @@ struct `RFC 1035 Domain Tests` {
 
     @Test
     func `Fails with empty domain`() throws {
-        #expect(throws: RFC_1035.Domain.ValidationError.empty) {
+        #expect(throws: RFC_1035.Domain.Error.empty) {
             _ = try RFC_1035.Domain("")
         }
     }
@@ -46,7 +46,7 @@ struct `RFC 1035 Domain Tests` {
     @Test
     func `Fails with too many labels`() throws {
         let longDomain = Array(repeating: "a", count: 128).joined(separator: ".")
-        #expect(throws: RFC_1035.Domain.ValidationError.tooManyLabels) {
+        #expect(throws: RFC_1035.Domain.Error.tooManyLabels) {
             _ = try RFC_1035.Domain(longDomain)
         }
     }
@@ -55,21 +55,21 @@ struct `RFC 1035 Domain Tests` {
     func `Fails with too long domain`() throws {
         let longLabel = String(repeating: "a", count: 63)
         let longDomain = Array(repeating: longLabel, count: 5).joined(separator: ".")
-        #expect(throws: RFC_1035.Domain.ValidationError.tooLong(319)) {
+        #expect(throws: RFC_1035.Domain.Error.tooLong(319)) {
             _ = try RFC_1035.Domain(longDomain)
         }
     }
 
     @Test
     func `Fails with invalid label starting with hyphen`() throws {
-        #expect(throws: RFC_1035.Domain.ValidationError.invalidLabel("-example")) {
+        #expect(throws: RFC_1035.Domain.Error.invalidLabel(.startsWithHyphen("-example"))) {
             _ = try RFC_1035.Domain("-example.com")
         }
     }
 
     @Test
     func `Fails with invalid label ending with hyphen`() throws {
-        #expect(throws: RFC_1035.Domain.ValidationError.invalidLabel("example-")) {
+        #expect(throws: RFC_1035.Domain.Error.invalidLabel(.endsWithHyphen("example-"))) {
             _ = try RFC_1035.Domain("example-.com")
         }
     }

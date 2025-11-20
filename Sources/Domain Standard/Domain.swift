@@ -1,102 +1,126 @@
 //
-//  File.swift
-//  swift-web
+//  Domain.swift
+//  swift-domain-standard
 //
-//  Created by Coen ten Thije Boonkkamp on 28/12/2024.
+//  Universal domain type supporting multiple RFC standards
 //
+
 import RFC_1035
 import RFC_1123
-import RFC_5321
 
-/// A domain name that can be represented according to different RFC standards
-public struct _Domain: Hashable, Sendable {
-    let rfc1035: RFC_1035.Domain?
-    let rfc1123: RFC_1123.Domain?
-    let rfc5321: RFC_5321.Domain
+/// A universal domain name that tracks conformance to multiple RFC standards
+///
+/// ## Category Theory
+///
+/// Domain is a **product type** that stores the most permissive representation
+/// along with optional stricter variants:
+///
+/// ```
+/// Domain = RFC_1123.Domain × Optional<RFC_1035.Domain>
+/// ```
+///
+/// ## RFC Hierarchy
+///
+/// ```
+/// RFC 1035 ⊂ RFC 1123
+/// ```
+///
+/// - **RFC 1035**: Strictest (labels must start with letter)
+/// - **RFC 1123**: Allows labels starting with digits (used by RFC 5321/SMTP)
+///
+/// ## Canonical Storage
+///
+/// - **Required**: `rfc1123` (always present, most permissive stored)
+/// - **Optional**: `rfc1035` (if domain conforms to strictest rules)
+///
+/// Note: RFC 5321 (SMTP) uses RFC 1123 domain syntax, so `rfc1123` serves both purposes.
+public struct Domain: Hashable, Sendable {
+    /// RFC 1035 domain if this domain conforms to the strictest standard
+    public let rfc1035: RFC_1035.Domain?
 
-    /// Initialize with a domain string
-    public init(_ string: String) throws {
-        // RFC 5321 is required as it's our most permissive format
-        self.rfc5321 = try RFC_5321.Domain(string)
+    /// RFC 1123 domain (always present)
+    ///
+    /// Also serves as RFC 5321 domain since RFC 5321 uses RFC 1123 syntax.
+    public let rfc1123: RFC_1123.Domain
 
-        // Try to initialize stricter formats if possible
-        self.rfc1123 = try? RFC_1123.Domain(string)
-        self.rfc1035 = try? RFC_1035.Domain(string)
+    /// Initialize with an RFC 1035 domain (strictest)
+    ///
+    /// Automatically populates rfc1123 since RFC 1035 ⊂ RFC 1123.
+    public init(rfc1035: RFC_1035.Domain) throws(Error) {
+        self.rfc1035 = rfc1035
+
+        // RFC 1035 domains are valid RFC 1123 domains
+        do {
+            self.rfc1123 = try RFC_1123.Domain(rfc1035.name)
+        } catch {
+            throw Error.conversionFailure("RFC 1035", to: "RFC 1123")
+        }
     }
 
-    /// Initialize with an array of labels
-    public init(labels: [String]) throws {
+    /// Initialize with an RFC 1123 domain (canonical init)
+    ///
+    /// Attempts to upgrade to RFC 1035 if possible.
+    public init(rfc1123: RFC_1123.Domain) {
+        // Try to upgrade to RFC 1035 if possible
+        self.rfc1035 = try? RFC_1035.Domain(rfc1123.name)
+        self.rfc1123 = rfc1123
+    }
+}
+
+// MARK: - Convenience Initializers
+
+extension Domain {
+    /// Initialize from a string representation
+    ///
+    /// Parses and validates the domain, storing it with all applicable RFC variants.
+    public init(_ string: String) throws(Error) {
+        // Always try RFC 1123 (required for rfc5321)
+        guard let rfc1123 = try? RFC_1123.Domain(string) else {
+            throw Error.invalidFormat(string)
+        }
+
+        self.init(rfc1123: rfc1123)
+    }
+
+    /// Initialize from an array of labels
+    public init(labels: [String]) throws(Error) {
         try self.init(labels.joined(separator: "."))
     }
 }
 
-public typealias Domain = _Domain
-
-extension Domain {
-    /// Initialize from RFC1035
-    public init(rfc1035: RFC_1035.Domain) throws {
-        self.rfc1035 = rfc1035
-        self.rfc1123 = try {
-            guard let domain = try? RFC_1123.Domain(rfc1035.name) else {
-                throw DomainError.conversionFailure
-            }
-            return domain
-        }()
-        self.rfc5321 = try {
-            guard let domain = try? RFC_5321.Domain(rfc1035.name) else {
-                throw DomainError.conversionFailure
-            }
-            return domain
-        }()
-    }
-
-    /// Initialize from RFC1123
-    /// Note: RFC 5321 reuses RFC 1123 domain definitions, so this conversion is infallible
-    public init(rfc1123: RFC_1123.Domain) {
-        self.rfc1035 = nil  // RFC1123 may not be RFC1035 compliant
-        self.rfc1123 = rfc1123
-        // RFC 5321 uses RFC 1123 domains directly (type alias), so this is safe
-        self.rfc5321 = rfc1123
-    }
-
-    /// Initialize from RFC_5321.Domain
-    /// Note: RFC_5321.Domain is actually a type alias for RFC_1123.Domain
-    public init(rfc5321: RFC_5321.Domain) {
-        self.rfc1035 = nil  // RFC_5321.Domain may not be RFC1035 compliant
-        self.rfc1123 = rfc5321  // RFC 5321 uses RFC 1123 domains
-        self.rfc5321 = rfc5321
-    }
-}
-
 // MARK: - Properties
+
 extension Domain {
     /// The domain string, using the most specific format available
     public var name: String {
-        rfc1035?.name ?? rfc1123?.name ?? rfc5321.name
+        rfc1035?.name ?? rfc1123.name
     }
 
-    /// The top-level domain if available (only for RFC1035/1123 domains)
+    /// The top-level domain (rightmost label)
     public var tld: String? {
-        rfc1035?.tld?.value ?? rfc1123?.tld?.value
+        rfc1035?.tld?.value ?? rfc1123.tld?.value
     }
 
-    /// The second-level domain if available (only for RFC1035/1123 domains)
+    /// The second-level domain (second from right)
     public var sld: String? {
-        rfc1035?.sld?.value ?? rfc1123?.sld?.value
+        rfc1035?.sld?.value ?? rfc1123.sld?.value
     }
 
-    /// Returns true if this is a standard domain (not an IP address)
+    /// Returns true if this domain conforms to RFC 1035 (strictest)
+    public var isRFC1035Compliant: Bool {
+        rfc1035 != nil
+    }
+
+    /// Returns true if this is a standard domain (has labels, not an IP address)
+    ///
+    /// Always true for Domain since we only store valid RFC 1123 domains.
     public var isStandardDomain: Bool {
-        rfc1123 != nil
+        true
     }
-
-    //    /// Returns true if this is an IP address literal
-    //    public var isAddressLiteral: Bool {
-    //        rfc5321.isAddressLiteral
-    //    }
 }
 
 // MARK: - Domain Operations
+
 extension Domain {
     /// Returns true if this is a subdomain of the given domain
     public func isSubdomain(of parent: Domain) -> Bool {
@@ -104,58 +128,106 @@ extension Domain {
         if let myRFC1035 = rfc1035, let parentRFC1035 = parent.rfc1035 {
             return myRFC1035.isSubdomain(of: parentRFC1035)
         }
-        if let myRFC1123 = rfc1123, let parentRFC1123 = parent.rfc1123 {
-            return myRFC1123.isSubdomain(of: parentRFC1123)
-        }
-        return false  // Can't determine subdomain relationship for RFC_5321.Domain address literals
+        return rfc1123.isSubdomain(of: parent.rfc1123)
     }
 
     /// Creates a subdomain by prepending new labels
-    public func addingSubdomain(_ components: String...) throws -> Domain {
+    public func addingSubdomain(_ components: String...) throws(Error) -> Domain {
         // Use the most specific format available
         if let domain = rfc1035 {
-            return try Domain(rfc1035: domain.addingSubdomain(components))
+            do {
+                return try Domain(rfc1035: domain.addingSubdomain(components))
+            } catch {
+                throw Error.cannotCreateSubdomain
+            }
         }
-        if let domain = rfc1123 {
-            return try Domain(rfc1123: domain.addingSubdomain(components))
+        // Fall back to RFC 1123
+        do {
+            let subdomain = try rfc1123.addingSubdomain(components)
+            return Domain(rfc1123: subdomain)
+        } catch {
+            throw Error.cannotCreateSubdomain
         }
-        throw DomainError.cannotCreateSubdomain
     }
 
     /// Returns the parent domain by removing the leftmost label
-    public func parent() throws -> Domain? {
+    public func parent() throws(Error) -> Domain? {
         // Use the most specific format available
-        if let domain = rfc1035, let parent = try domain.parent() {
-            return try Domain(rfc1035: parent)
+        if let domain = rfc1035 {
+            do {
+                guard let parent = try domain.parent() else { return nil }
+                return try Domain(rfc1035: parent)
+            } catch {
+                throw Error.conversionFailure("RFC 1035", to: "parent domain")
+            }
         }
-        if let domain = rfc1123, let parent = try domain.parent() {
+        // Fall back to RFC 1123
+        do {
+            guard let parent = try rfc1123.parent() else { return nil }
             return Domain(rfc1123: parent)
+        } catch {
+            throw Error.conversionFailure("RFC 1123", to: "parent domain")
         }
-        return nil
+    }
+
+    /// Returns the root domain (tld + sld)
+    public func root() throws(Error) -> Domain? {
+        if let domain = rfc1035 {
+            do {
+                guard let root = try domain.root() else { return nil }
+                return try Domain(rfc1035: root)
+            } catch {
+                throw Error.conversionFailure("RFC 1035", to: "root domain")
+            }
+        }
+        // Fall back to RFC 1123
+        do {
+            guard let root = try rfc1123.root() else { return nil }
+            return Domain(rfc1123: root)
+        } catch {
+            throw Error.conversionFailure("RFC 1123", to: "root domain")
+        }
     }
 }
 
 // MARK: - Errors
-extension Domain {
-    public enum DomainError: Error, Equatable {
-        case cannotCreateSubdomain
-        case conversionFailure
-        case invalidFormat(description: String)
 
-        public var errorDescription: String? {
-            switch self {
-            case .cannotCreateSubdomain:
-                return "Cannot create subdomain for IP address literals"
-            case .conversionFailure:
-                return "Failed to convert"
-            case .invalidFormat(let description):
-                return "Invalid format: \(description)"
-            }
+extension Domain {
+    /// Errors that can occur during domain operations
+    public enum Error: Swift.Error, Equatable {
+        /// Invalid domain format
+        case invalidFormat(_ description: String)
+
+        /// Cannot create subdomain for this domain type
+        case cannotCreateSubdomain
+
+        /// RFC conversion failed
+        case conversionFailure(_ from: String, to: String)
+
+        /// IDNA conversion failed
+        case idnaConversionFailure(_ reason: String)
+    }
+}
+
+// MARK: - CustomStringConvertible
+
+extension Domain.Error: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .invalidFormat(let desc):
+            return "Invalid domain format: \(desc)"
+        case .cannotCreateSubdomain:
+            return "Cannot create subdomain for this domain type"
+        case .conversionFailure(let from, let to):
+            return "Failed to convert from \(from) to \(to)"
+        case .idnaConversionFailure(let reason):
+            return "IDNA conversion failed: \(reason)"
         }
     }
 }
 
 // MARK: - Protocol Conformances
+
 extension Domain: CustomStringConvertible {
     public var description: String { name }
 }

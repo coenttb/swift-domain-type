@@ -16,7 +16,7 @@ struct ReadmeVerificationTests {
     @Test
     func `Quick Start - Basic Domain Creation (README lines 43-53)`() throws {
         // Create a domain from a string
-        let domain = try _Domain("example.com")
+        let domain = try Domain("example.com")
         #expect(domain.name == "example.com")
 
         // Access domain components
@@ -26,7 +26,7 @@ struct ReadmeVerificationTests {
 
     @Test
     func `Quick Start - Working with Subdomains (README lines 57-68)`() throws {
-        let domain = try _Domain("example.com")
+        let domain = try Domain("example.com")
 
         // Create a subdomain
         let subdomain = try domain.addingSubdomain("www")
@@ -44,7 +44,7 @@ struct ReadmeVerificationTests {
     @Test
     func `Quick Start - Multi-RFC Format Support (README lines 72-88)`() throws {
         // The Domain type automatically detects which RFC formats are valid
-        let domain = try _Domain("example.com")
+        let domain = try Domain("example.com")
 
         // Check which formats are supported
         #expect(domain.isStandardDomain == true)
@@ -54,33 +54,31 @@ struct ReadmeVerificationTests {
             // Use strict DNS domain
             #expect(rfc1035.name == "example.com")
         }
-        if let rfc1123 = domain.rfc1123 {
-            // Use internet host name
-            #expect(rfc1123.name == "example.com")
-        }
-        // RFC 5321 format is always available
-        #expect(domain.rfc5321.name == "example.com")
+        // RFC 1123 format is always available
+        #expect(domain.rfc1123.name == "example.com")
+        // RFC 5321 uses RFC 1123 domain syntax
+        #expect(domain.rfc1123.name == "example.com")
     }
 
     @Test
     func `Initializing Domains (README lines 94-104)`() throws {
         // From string
-        let domain1 = try _Domain("example.com")
+        let domain1 = try Domain("example.com")
         #expect(domain1.name == "example.com")
 
         // From labels array
-        let domain2 = try _Domain(labels: ["www", "example", "com"])
+        let domain2 = try Domain(labels: ["www", "example", "com"])
         #expect(domain2.name == "www.example.com")
 
         // From specific RFC format
         let rfc1035Domain = try RFC_1035.Domain("example.com")
-        let domain3 = try _Domain(rfc1035: rfc1035Domain)
+        let domain3 = try Domain(rfc1035: rfc1035Domain)
         #expect(domain3.name == "example.com")
     }
 
     @Test
     func `Domain Operations (README lines 108-125)`() throws {
-        let domain = try _Domain("example.com")
+        let domain = try Domain("example.com")
 
         // Add multiple subdomain levels
         let deepSubdomain = try domain.addingSubdomain("api", "v1")
@@ -88,7 +86,7 @@ struct ReadmeVerificationTests {
         #expect(deepSubdomain.name == "api.v1.example.com")
 
         // Walk up the domain hierarchy
-        var current: _Domain? = deepSubdomain
+        var current: Domain? = deepSubdomain
         var hierarchy: [String] = []
         while let dom = current {
             hierarchy.append(dom.name)
@@ -102,10 +100,10 @@ struct ReadmeVerificationTests {
 
     @Test
     func `Subdomain Checking (README lines 129-139)`() throws {
-        let root = try _Domain("example.com")
-        let sub1 = try _Domain("www.example.com")
-        let sub2 = try _Domain("api.example.com")
-        let other = try _Domain("other.com")
+        let root = try Domain("example.com")
+        let sub1 = try Domain("www.example.com")
+        let sub2 = try Domain("api.example.com")
+        let other = try Domain("other.com")
 
         #expect(sub1.isSubdomain(of: root) == true)
         #expect(sub2.isSubdomain(of: root) == true)
@@ -116,11 +114,11 @@ struct ReadmeVerificationTests {
     @Test
     func `Codable Support (README lines 143-155)`() throws {
         struct Config: Codable {
-            let domain: _Domain
+            let domain: Domain
         }
 
         // Encoding
-        let config = Config(domain: try _Domain("example.com"))
+        let config = Config(domain: try Domain("example.com"))
         let jsonData = try JSONEncoder().encode(config)
         #expect(!jsonData.isEmpty)
 
@@ -131,14 +129,14 @@ struct ReadmeVerificationTests {
 
     @Test
     func `RawRepresentable (README lines 159-168)`() throws {
-        let domain = try _Domain("example.com")
+        let domain = try Domain("example.com")
 
         // Get raw value
         let rawValue = domain.rawValue
         #expect(rawValue == "example.com")
 
         // Initialize from raw value
-        let reconstructed = _Domain(rawValue: "example.com")
+        let reconstructed = Domain(rawValue: "example.com")
         #expect(reconstructed?.name == "example.com")
     }
 
@@ -147,7 +145,7 @@ struct ReadmeVerificationTests {
         // DomainError enum provides detailed error information
         // Note: Invalid domains throw errors from underlying RFC implementations
         do {
-            let _ = try _Domain("invalid domain with spaces")
+            let _ = try Domain("invalid domain with spaces")
             Issue.record("Should have thrown an error for invalid domain")
         } catch {
             // Expected to catch an error for invalid domain format
