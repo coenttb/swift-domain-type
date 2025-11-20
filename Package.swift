@@ -28,9 +28,9 @@ let package = Package(
         .library(name: .domain, targets: [.domain])
     ],
     dependencies: [
-        .package(path: "../swift-rfc-1035"),
-        .package(path: "../swift-rfc-1123"),
-        .package(path: "../swift-rfc-5321")
+        .package(url: "https://github.com/swift-standards/swift-rfc-1035", from: "0.1.0"),
+        .package(url: "https://github.com/swift-standards/swift-rfc-1123", from: "0.1.0"),
+        .package(url: "https://github.com/swift-standards/swift-rfc-5321", from: "0.1.0")
     ],
     targets: [
         .target(
@@ -54,16 +54,4 @@ let package = Package(
     swiftLanguageModes: [.v6]
 )
 
-extension String {
-    var tests: Self { self + " Tests" }
-    var foundation: Self { self + " Foundation" }
-}
-
-for target in package.targets where ![.system, .binary, .plugin].contains(target.type) {
-    let existing = target.swiftSettings ?? []
-    target.swiftSettings = existing + [
-        .enableUpcomingFeature("ExistentialAny"),
-        .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility")
-    ]
-}
+extension String { var tests: Self { self + " Tests" } }

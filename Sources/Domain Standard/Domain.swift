@@ -4,9 +4,9 @@
 //
 //  Created by Coen ten Thije Boonkkamp on 28/12/2024.
 //
-public import RFC_1035
-public import RFC_1123
-public import RFC_5321
+import RFC_1035
+import RFC_1123
+import RFC_5321
 
 /// A domain name that can be represented according to different RFC standards
 public struct _Domain: Hashable, Sendable {
@@ -161,12 +161,12 @@ extension Domain: CustomStringConvertible {
 }
 
 extension Domain: Codable {
-    public func encode(to encoder: any Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(name)
     }
 
-    public init(from decoder: any Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let string = try container.decode(String.self)
         try self.init(string)

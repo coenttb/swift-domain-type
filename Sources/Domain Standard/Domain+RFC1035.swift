@@ -1,4 +1,4 @@
-public import RFC_1035
+import RFC_1035
 
 extension Domain {
     // Forward conversion already exists in Domain.swift
