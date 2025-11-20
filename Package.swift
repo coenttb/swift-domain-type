@@ -14,6 +14,7 @@ extension Target.Dependency {
     static var rfc1035: Self { .product(name: "RFC 1035", package: "swift-rfc-1035") }
     static var rfc1123: Self { .product(name: "RFC 1123", package: "swift-rfc-1123") }
     static var rfc5321: Self { .product(name: "RFC 5321", package: "swift-rfc-5321") }
+    static var rfc5890: Self { .product(name: "RFC 5890", package: "swift-rfc-5890") }
 }
 
 let package = Package(
@@ -30,7 +31,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/swift-standards/swift-rfc-1035", from: "0.1.0"),
         .package(url: "https://github.com/swift-standards/swift-rfc-1123", from: "0.1.0"),
-        .package(url: "https://github.com/swift-standards/swift-rfc-5321", from: "0.1.0")
+        .package(url: "https://github.com/swift-standards/swift-rfc-5321", from: "0.1.0"),
+        .package(path: "../swift-rfc-5890")
     ],
     targets: [
         .target(
@@ -38,7 +40,8 @@ let package = Package(
             dependencies: [
                 .rfc1035,
                 .rfc1123,
-                .rfc5321
+                .rfc5321,
+                .rfc5890
             ]
         ),
         .testTarget(
