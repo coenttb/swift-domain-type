@@ -73,18 +73,18 @@ extension Domain {
     /// Initialize from a string representation
     ///
     /// Parses and validates the domain, storing it with all applicable RFC variants.
-    public init(_ string: String) throws(Error) {
+    public init<S: StringProtocol>(_ string: S) throws(Error) {
         // Always try RFC 1123 (required for rfc5321)
-        guard let rfc1123 = try? RFC_1123.Domain(string) else {
-            throw Error.invalidFormat(string)
+        guard let rfc1123 = try? RFC_1123.Domain(String(string)) else {
+            throw Error.invalidFormat(String(string))
         }
 
         self.init(rfc1123: rfc1123)
     }
 
     /// Initialize from an array of labels
-    public init(labels: [String]) throws(Error) {
-        try self.init(labels.joined(separator: "."))
+    public init<S: StringProtocol>(labels: [S]) throws(Error) {
+        try self.init(labels.map { String($0) }.joined(separator: "."))
     }
 }
 
@@ -132,18 +132,19 @@ extension Domain {
     }
 
     /// Creates a subdomain by prepending new labels
-    public func addingSubdomain(_ components: String...) throws(Error) -> Domain {
+    public func addingSubdomain<S: StringProtocol>(_ components: S...) throws(Error) -> Domain {
+        let stringComponents = components.map { String($0) }
         // Use the most specific format available
         if let domain = rfc1035 {
             do {
-                return try Domain(rfc1035: domain.addingSubdomain(components))
+                return try Domain(rfc1035: domain.addingSubdomain(stringComponents))
             } catch {
                 throw Error.cannotCreateSubdomain
             }
         }
         // Fall back to RFC 1123
         do {
-            let subdomain = try rfc1123.addingSubdomain(components)
+            let subdomain = try rfc1123.addingSubdomain(stringComponents)
             return Domain(rfc1123: subdomain)
         } catch {
             throw Error.cannotCreateSubdomain
