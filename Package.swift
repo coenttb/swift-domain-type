@@ -32,7 +32,7 @@ let package = Package(
         .package(url: "https://github.com/swift-standards/swift-rfc-1035", from: "0.1.0"),
         .package(url: "https://github.com/swift-standards/swift-rfc-1123", from: "0.1.0"),
         .package(url: "https://github.com/swift-standards/swift-rfc-5321", from: "0.1.0"),
-        .package(path: "../swift-rfc-5890")
+        .package(url: "https://github.com/swift-standards/swift-rfc-5890", from: "0.1.0")
     ],
     targets: [
         .target(

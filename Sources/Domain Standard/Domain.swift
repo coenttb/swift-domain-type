@@ -98,12 +98,12 @@ extension Domain {
 
     /// The top-level domain (rightmost label)
     public var tld: String? {
-        rfc1035?.tld?.value ?? rfc1123.tld?.value
+        rfc1035?.tld?.rawValue ?? rfc1123.tld?.rawValue
     }
 
     /// The second-level domain (second from right)
     public var sld: String? {
-        rfc1035?.sld?.value ?? rfc1123.sld?.value
+        rfc1035?.sld?.rawValue ?? rfc1123.sld?.rawValue
     }
 
     /// Returns true if this domain conforms to RFC 1035 (strictest)
