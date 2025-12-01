@@ -5,9 +5,10 @@
 //  Validates all code examples from README.md
 //
 
+import Foundation
 import RFC_1035
 import Testing
-import Foundation
+
 @testable import Domain_Standard
 
 @Suite("README Code Examples Validation", .serialized)

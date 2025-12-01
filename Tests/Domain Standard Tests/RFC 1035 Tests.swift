@@ -5,9 +5,10 @@
 //  Created by Coen ten Thije Boonkkamp on 28/12/2024.
 //
 
+import Foundation
 import RFC_1035
 import Testing
-import Foundation
+
 @testable import Domain_Standard
 
 @Suite

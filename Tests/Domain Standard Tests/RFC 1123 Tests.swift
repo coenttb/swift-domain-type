@@ -5,9 +5,10 @@
 //  Created by Coen ten Thije Boonkkamp on 28/12/2024.
 //
 
+import Foundation
 import RFC_1123
 import Testing
-import Foundation
+
 @testable import Domain_Standard
 
 @Suite
@@ -54,7 +55,15 @@ struct `RFC 1123 Host Tests` {
     @Test
     func `Fails with invalid label containing special characters`() throws {
         // @ is ASCII 0x40
-        #expect(throws: RFC_1123.Domain.Error.invalidLabel(.invalidCharacters("host@name", byte: 0x40, reason: "Only letters, digits and hyphens are allowed"))) {
+        #expect(
+            throws: RFC_1123.Domain.Error.invalidLabel(
+                .invalidCharacters(
+                    "host@name",
+                    byte: 0x40,
+                    reason: "Only letters, digits and hyphens are allowed"
+                )
+            )
+        ) {
             _ = try RFC_1123.Domain("host@name.com")
         }
     }

@@ -5,10 +5,11 @@
 //  RFC 5321 uses RFC 1123 domain syntax
 //
 
-import RFC_5321
-import RFC_1123
-import Testing
 import Foundation
+import RFC_1123
+import RFC_5321
+import Testing
+
 @testable import Domain_Standard
 
 @Suite

@@ -72,7 +72,9 @@ extension Domain {
             let asciiString = try IDNA.toASCII(domain.name)
             try self.init(asciiString)
         } catch {
-            throw Error.idnaConversionFailure("Failed to convert '\(domain.name)' to ASCII: \(error)")
+            throw Error.idnaConversionFailure(
+                "Failed to convert '\(domain.name)' to ASCII: \(error)"
+            )
         }
     }
 
@@ -102,7 +104,9 @@ extension Domain {
             let unicodeString = try IDNA.toUnicode(domain.name)
             try self.init(unicodeString)
         } catch {
-            throw Error.idnaConversionFailure("Failed to convert '\(domain.name)' to Unicode: \(error)")
+            throw Error.idnaConversionFailure(
+                "Failed to convert '\(domain.name)' to Unicode: \(error)"
+            )
         }
     }
 }
