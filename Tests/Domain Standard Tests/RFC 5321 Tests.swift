@@ -47,7 +47,7 @@ struct `RFC 5321 Domain Tests` {
 
     @Test
     func `Fails with invalid TLD starting with number`() throws {
-        #expect(throws: RFC_1123.Domain.Error.invalidLabel(.invalidTLD("123com"))) {
+        #expect(throws: RFC_1123.Domain.Error.invalidTLD("123com")) {
             _ = try RFC_1123.Domain("example.123com")
         }
     }

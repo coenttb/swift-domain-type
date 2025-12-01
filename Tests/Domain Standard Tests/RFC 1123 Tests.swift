@@ -39,21 +39,22 @@ struct `RFC 1123 Host Tests` {
 
     @Test
     func `Fails with invalid TLD starting with number`() throws {
-        #expect(throws: RFC_1123.Domain.Error.invalidLabel(.invalidTLD("123com"))) {
+        #expect(throws: RFC_1123.Domain.Error.invalidTLD("123com")) {
             _ = try RFC_1123.Domain("example.123com")
         }
     }
 
     @Test
     func `Fails with invalid TLD ending with number`() throws {
-        #expect(throws: RFC_1123.Domain.Error.invalidLabel(.invalidTLD("com123"))) {
+        #expect(throws: RFC_1123.Domain.Error.invalidTLD("com123")) {
             _ = try RFC_1123.Domain("example.com123")
         }
     }
 
     @Test
     func `Fails with invalid label containing special characters`() throws {
-        #expect(throws: RFC_1123.Domain.Error.invalidLabel(.invalidCharacters("host@name"))) {
+        // @ is ASCII 0x40
+        #expect(throws: RFC_1123.Domain.Error.invalidLabel(.invalidCharacters("host@name", byte: 0x40, reason: "Only letters, digits and hyphens are allowed"))) {
             _ = try RFC_1123.Domain("host@name.com")
         }
     }
